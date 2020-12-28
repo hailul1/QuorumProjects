@@ -1,0 +1,136 @@
+/*Luwam Hailu
+This program asks for user input to determine how many numbers to generate and then displays the random numbers that were generated. 
+The program then sorts these numbers using the Quicksort algorithm and calculates the average, variance, and standard deviation and
+outputs the ordered values and the statistics*/
+
+use Libraries.Compute.Random
+use Libraries.Containers.Array
+use Libraries.Compute.Math
+
+
+class Main
+
+    Array<integer> List
+    integer count = 0
+    integer min = 10
+    integer max = 10000
+    number variance = 0.0
+    number stddev = 0.0
+    number ave = 0.0
+action Main 
+    integer continue = GetData()
+    if continue not=-1                      // if user input meets standards, program continues to call functions to sort and calculate stats
+        DisplayNums()
+        integer c = 0                       // beginning lo value
+        integer d = count-1                 // beginning hi value
+        QuickSort(c,d)                      // void quicksort (int lo, int hi)
+        Stats()                                 
+        DisplayData()
+    end
+end
+
+action GetData returns integer
+    text count_input = input("Enter how many numbers you want to generate, it may be 10-10000") 
+    count = cast(integer, count_input) 
+    if count >= min and count <= max        // check to see if user input is in specified range
+        integer new_value = 0               // if value is within range, that many numbers are randomly generated and stored in array
+        repeat count times                  // loop to create and store values in array
+            Random random 
+            new_value = random:RandomIntegerBetween(0, 10000)
+            List:Add(new_value)
+        end
+        return 1                            // send OK signal to main to continue program
+    end
+    if count < min or count > max           // if user input is outside of range, output error message
+        text ErrorMessage = "That is not in specified range"
+        output ErrorMessage
+        return -1                           // send NOT OK signal to main to terminate program
+    end
+return 0
+end
+
+action DisplayNums
+    text line = ""
+    integer position = 0
+    integer ten = 0
+    repeat count times                  // loop to output 10 values per line
+        integer val1 = List:Get(position)   // get array at given position and set to val1
+        value1 = cast(text, val1)           // convert value to string
+        line = line + " " + value1          // add value to string line
+        position = position + 1             // move to next position in array
+        ten = ten + 1                       // increase counter of values encountered
+        if ten = 10                         // check if 10 values have been encountered and included on the string line
+            output line                     // if so, output string of 10 values and restart string line and counter
+            line = ""   
+            ten = 0
+        end       
+    end
+    output line                             // output remaining values in string line
+end
+
+action QuickSort (integer lo, integer hi)
+    integer i = lo                      // lo is the lower index, 
+    integer j = hi                      // hi is the upper index of region of array to be sorted
+    integer h = 0
+    integer x = List:Get((lo+hi)/2)     // int x=a[(lo+hi)/2]
+    repeat while (i<=j)
+        repeat while (List:Get(i) < x)  // while (a[i]<x) i++
+            i = i + 1
+        end
+        repeat while(List:Get(j) > x)   // while (a[j]>x) j--
+            j = j - 1
+        end
+        if(i <=j)
+            h = List:Get(i)             // h=a[i]
+            List:Set(i, List:Get(j))    // a[i]=a[j];
+            List:Set(j, h)              // a[j]=h
+            i = i + 1                   // i++
+            j = j - 1                   // j--
+        end 
+    end
+    // recursion
+    if (lo < j)
+        QuickSort(lo, j)                // if (lo<j) quicksort(a, lo, j)
+    end
+    if (i < hi)
+        QuickSort(i, hi)                // if (i<hi) quicksort(a, i, hi)
+    end
+end
+
+action Stats
+    number total = 0.0
+    integer position = 0
+    number x = 0                        // x = (array[i] - ave)^2
+    number y = 0                        // y = sum of all (array[i] - ave)
+    repeat count times                  // loop to calculate sum of all values in array
+        total = total + List:Get(position)
+        position = position + 1
+    end
+    ave = total / count                 // calculate average
+    total = 0
+    position = 0
+    repeat count times                  // loop to calculate the sum in the variance formula
+        x = List:Get(position)
+        x = x - ave
+        x = x * x
+        y = y + x
+        position  = position + 1
+    end
+    variance = y / (count - 1)
+    Math math
+    stddev = math:SquareRoot(variance)
+end
+
+action DisplayData
+    text sortedNumsMessage = "Sorted Values:"
+    output sortedNumsMessage
+    DisplayNums()
+    text aveMessage = "Average: " + ave
+    output aveMessage
+    text varMessage = "Variance: " + variance
+    output varMessage
+    text sdMessage = "Standard Deviation: " + stddev
+    output sdMessage
+end
+
+end
