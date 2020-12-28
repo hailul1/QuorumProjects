@@ -1,0 +1,132 @@
+/*Luwam Hailu
+This program emulates the game Rock-Paper-Scissors-Lizard-Spock. The program utilizes user
+input/output to facilitate a game between the user and computer, using random number generation, 
+and determines the winner based on the rules of the game. */
+
+use Libraries.Compute.Random
+
+class Main
+action Main 
+    text InstructionMessage = "Enter 1 for rock, 2 for paper, 3 for scissors, 4 for lizard, or 5 for spock" //Denotes player's options
+    output InstructionMessage
+    PlayGame() //Begins procedures for game operations such as interacting with user, generating computers choice, and determining winner
+end
+
+action PlayGame
+    integer playerChoice = PlayersTurn() //Retrieves user input for position choice
+    if(playerChoice) not= -1 // Executes rest of game if correct input is provided and terminates otherwise
+        integer computerChoice = ComputersTurn() //Generates computers choice
+        DetermineWinner(playerChoice, computerChoice) //Determines winner based on rules of the game 
+    end 
+end
+
+action PlayersTurn returns integer //Prompts user for input and error checks the input
+    user_in = false
+    integer choice = 0
+    text ErrorMessage = "That number is not in the specified range." //Error message displayed when incorrect input provided by user
+    text player_choice = input("Please enter a number 1-5") //Message prompt for user input
+    choice = cast(integer, player_choice) //Converts user text input into ingeger to allow for error checking comparisons and function return value
+    if choice not= 1 and choice not=2 and choice not=3 and choice not=4 and choice not=5 //Checks if input is outside of 1-5 range
+        output ErrorMessage
+        return -1 //Signal to notify program incorrect input has been provided and to terminate
+    else
+        user_in = true  //Signal to notify program correcy input has been provided and to continue game
+    end
+    return choice // Returns user choice
+end
+
+action ComputersTurn returns integer //Generates random number 1-5 to play against user input
+    Random random 
+    integer computer = random:RandomIntegerBetween(1,5)
+    return computer
+end
+
+action DetermineWinner (integer playerChoice, integer computerChoice) //Determines winner based off of specified game rules
+    text WinnerMessage = "It's a tie!"
+    if playerChoice = computerChoice 
+        output WinnerMessage
+    end
+    if playerChoice = 3 and computerChoice = 2
+        WinnerMessage = "Scissors cut paper, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 2 and computerChoice = 3
+        WinnerMessage = "Scissors cut paper, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 2 and computerChoice = 1
+        WinnerMessage = "Paper covers rock, you win!"
+        output WinnerMessage
+    end
+     if playerChoice = 1 and computerChoice = 2
+        WinnerMessage = "Paper covers rock, the computer wins!"
+        output WinnerMessage
+    end
+     if playerChoice = 1 and computerChoice = 4
+        WinnerMessage = "Rock crushes lizard, you win!"
+        output WinnerMessage
+    end
+     if playerChoice = 4 and computerChoice =1
+        WinnerMessage = "Rock crushes lizard, the computer wins!"
+        output WinnerMessage
+    end
+     if playerChoice = 4 and computerChoice = 5
+        WinnerMessage = "Lizard poisons spock, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 5 and computerChoice = 4
+        WinnerMessage = "Lizard poisons spock, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 5 and computerChoice = 3
+        WinnerMessage = "Spock smashes scissors, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 3 and computerChoice = 5
+        WinnerMessage = "Spock smashes scissors, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 3 and computerChoice = 4
+        WinnerMessage = "Scissors decapitate lizard, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 4 and computerChoice = 3
+        WinnerMessage = "Scissors decapitate lizard, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 4 and computerChoice = 2
+        WinnerMessage = "Lizard eats paper, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 2 and computerChoice = 4
+        WinnerMessage = "Lizard eats paper, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 2 and computerChoice = 5
+        WinnerMessage = "Paper disproves Spock, you win!"
+        output WinnerMessage 
+    end
+    if playerChoice = 5 and computerChoice = 2
+        WinnerMessage = "Paper disproves Spock, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 5 and computerChoice = 1
+        WinnerMessage = "Spock vaporizes rock, you win!"
+        output WinnerMessage
+    end
+    if playerChoice = 1 and computerChoice = 5
+        WinnerMessage = "Spock vaporizes rock, the computer wins!"
+        output WinnerMessage
+    end
+    if playerChoice = 1 and computerChoice = 3
+        WinnerMessage = "Rock crushes scissors, you win!"
+        output WinnerMessage    
+    end
+    if playerChoice = 3 and computerChoice = 1
+        WinnerMessage = "Rock crushes scissors, the computer wins!"
+        output WinnerMessage
+    end
+    
+end
+
+end
